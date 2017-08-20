@@ -47,6 +47,7 @@ class ItemController extends Controller
         return redirect()->back();
     }
 
+    // reduce one item from the cart
     public function reduceItem($id) {
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
