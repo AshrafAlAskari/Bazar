@@ -14,7 +14,7 @@ class AdminSeeder extends Seeder
         $admin = new \App\Admin([
             'name' => 'admin',
             'email' => 'admin@admin.com',
-            'password' => '$2y$10$305Li22WnlXGPbkoXxzeL.gOECgdwD3.JhdUPhAcw7OP5jLx1pu2e'
+            'password' => '$2y$10$auS.lBj1Za95mm4xOHkUfe3biMBi4Q5JbNqO920xPnysBctWiPYdy'
         ]);
         $admin->save();
     }
