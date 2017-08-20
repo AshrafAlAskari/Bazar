@@ -1,0 +1,22 @@
+html, body {
+    background-color:#f5f8fa;
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+}
+
+header {
+    padding-bottom: 10px;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/* Bootstrap edit */
+.navbar-brand{
+    font-size: 22px;
+    font-weight: 600;
+}
+/* End Bootstrap edit */
