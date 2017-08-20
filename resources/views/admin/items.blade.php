@@ -139,7 +139,8 @@
             items: {!! $items !!},
             item_name: '',
             item_info: '',
-            item_price: ''
+            item_price: '',
+            categories: {!! $categories !!}
         },
         methods:{
             edit_item: function(id) {
