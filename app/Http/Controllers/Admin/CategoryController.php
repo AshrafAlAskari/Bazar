@@ -36,9 +36,12 @@ class CategoryController extends Controller
 
     public function editCategory(Request $request)
     {
+        // validating input
         $this->validate($request, [
             'category_name' => 'required|max:30',
         ]);
+
+        // finding targeted category, update it and return the update
         $category = Category::find($request->category_id);
         $category->name = $request->category_name;
         $category->update();
@@ -47,7 +50,13 @@ class CategoryController extends Controller
 
     public function deleteCategory(Request $request)
     {
-        // delete a category
-        Category::find($request->category_id)->delete();
+        // delete a category if it has not items
+        if (Category::find($request->category_id)->items->isEmpty()) {
+            Category::find($request->category_id)->delete();
+        } else {
+            return response()->json(['message' => 'Category is not empty, please delete related items first'], 200);
+        }
+
+
     }
 }

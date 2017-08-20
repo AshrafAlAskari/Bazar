@@ -18,7 +18,7 @@
                             <div class="btn-group float-right">
                                 &nbsp;<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" name="button">Action <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">Reduce by 1</a></li>
+                                    <li><a href="{{route('reduce_item', ['id' => $item['item']['id']])}}">Reduce by 1</a></li>
                                     <li><a href="{{route('remove_item', ['id' => $item['item']['id']])}}">Reduce all</a></li>
                                 </ul>
                             </div>

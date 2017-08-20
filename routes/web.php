@@ -17,6 +17,7 @@ Route::get('items/{category_id}','ItemController@getCategoryItems')->name('items
 Route::get('image_item/{filename}','ItemController@getItemImage')->name('image_item');
 Route::get('add_to_cart/{item_id}','ItemController@addToCart')->name('add_to_cart');
 Route::get('get_cart','ItemController@getCart')->name('get_cart');
+Route::get('reduce_item/{item_id}', 'ItemController@reduceItem')->name('reduce_item');
 Route::get('remove_item/{item_id}', 'ItemController@removeItem')->name('remove_item');
 Route::get('search', 'ItemController@searchItems')->name('search');
 

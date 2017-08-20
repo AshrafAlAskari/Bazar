@@ -112,7 +112,10 @@
                         category_id : id,
                     }
                 })
-                .done(function () {
+                .done(function (msg) {
+                    if(msg){
+                        alert(msg.message);
+                    }
                     location.reload();
                 });
             }

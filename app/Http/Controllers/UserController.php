@@ -35,7 +35,7 @@ class UserController extends Controller
     // user registeration
     public function register(Request $request)
     {
-        //validating input
+        // validating input
         $this->validate($request, [
             'first_name' => 'required|max:30',
             'last_name' => 'required|max:30',

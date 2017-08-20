@@ -55,11 +55,14 @@ class ItemController extends Controller
 
     public function editItem(Request $request)
     {
+        // validating input
         $this->validate($request, [
             'item_name' => 'required|max:30',
             'item_info' => 'required|max:200',
             'item_price' => 'required|max:10000000'
         ]);
+
+        // finding targeted item, update it and return the update
         $item = Item::find($request->item_id);
         $item->name = $request->item_name;
         $item->info = $request->item_info;

@@ -29,6 +29,7 @@
             @endforeach
         @else
             <div class="row  justify-content-center">
+                <br />
                 <header><h3>No items in this category yet!</h3></header>
             </div>
         @endif
