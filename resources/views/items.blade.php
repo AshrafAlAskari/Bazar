@@ -40,7 +40,7 @@
                         <div class="card-body">
                             <h4 class="card-title">{{$item->name}}</h4>
                             <p class="card-text">{{$item->info}}</p>
-                            <a href="#" class="btn-sm btn-primary float-right">Add to cart</a>
+                            <a href="{{route('add_to_cart', ['item_id' => $item->id])}}" class="btn-sm btn-primary float-right">Add to cart</a>
                             <p class="float-left">${{$item->price}}</p>
                         </div>
                     </div>
