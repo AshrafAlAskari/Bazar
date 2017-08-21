@@ -109,7 +109,7 @@ class ItemController extends Controller
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
         $order = new Order();
-        $order->cart = serialize($cart);
+        $order->cart = base64_encode(serialize($cart));
         Auth::user()->orders()->save($order);
         Session::forget('cart');
         return redirect()->route('dashboard')->with('message', 'Successfully purchased products!');
