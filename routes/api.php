@@ -13,6 +13,19 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix'=>'v1','namespace'=>'\Api\V1'],function (){
+
+    // Route::middleware('jwt.token');
+
+    Route::get('items', 'ItemController@getItems');
+    Route::get('items/{category_id}', 'ItemController@getCategoryItems');
+    Route::post('search', 'ItemController@searchItems');
+
+    Route::get('orders', 'UserController@getOrders');
+
+    Route::group(['prefix'=>'user'],function (){
+        Route::post('login','UserController@login');
+        Route::post('register','UserController@register');
+    });
+
 });

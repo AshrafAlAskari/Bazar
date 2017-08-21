@@ -14,7 +14,8 @@
 // general website routes, doesn't need authentication
 Route::get('/', 'ItemController@getItems')->name('dashboard');
 Route::get('items/{category_id}','ItemController@getCategoryItems')->name('items');
-Route::get('image_item/{filename}','ItemController@getItemImage')->name('image_item');
+Route::get('items_sort/{category_id}','ItemController@sortByPrice')->name('items_sort_price');
+Route::get('items_filter/{category_id}','ItemController@filterByPrice')->name('items_filter_price');
 Route::get('add_to_cart/{item_id}','ItemController@addToCart')->name('add_to_cart');
 Route::get('get_cart','ItemController@getCart')->name('get_cart');
 Route::get('reduce_item/{item_id}', 'ItemController@reduceItem')->name('reduce_item');

@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Item;
 use App\Category;
-use Storage;
-use File;
 
 class ItemController extends Controller
 {
@@ -27,7 +25,7 @@ class ItemController extends Controller
             'name' => 'required|max:30',
             'info' => 'required|max:200',
             'price' => 'required|max:10000000',
-            'image' => 'required'
+            'image' => 'required|image'
         ]);
 
         //Creating new item
@@ -39,11 +37,11 @@ class ItemController extends Controller
 
         // preparing image name to be saved to the DB
         $file = $request->file('image');
-        $random = str_random(16);
-        $filename = $random. '.jpg';
+        $filename = str_random(16).'.jpg';
         if ($file) {
             $item->image = $filename;
-            Storage::disk('local')->put($filename, File::get($file));
+            // Storage::disk('local')->put($filename, File::get($file));
+            $request->file('image')->move('images/',$filename);
         }
         if (Category::find($request->category)->items()->save($item)) {
             $message = 'Successfully added!';

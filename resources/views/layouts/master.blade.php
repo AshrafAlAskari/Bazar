@@ -16,10 +16,6 @@
     </div>
 </div>
 
-<script>
-var token = '{{ Session::token() }}';
-</script>
-
 <script src="{{ URL::to('js/jquery-3.2.1.min.js') }}"></script>
 <script src="{{ URL::to('js/popper.min.js') }}"></script>
 <script src="{{ URL::to('js/bootstrap.min.js') }}"></script>

@@ -181,6 +181,7 @@ return [
          * Custom Providers...
          */
         Intervention\Image\ImageServiceProvider::class,
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class
     ],
 
     /*
@@ -232,7 +233,8 @@ return [
 
         // Custom Aliases
         'Image' => Intervention\Image\Facades\Image::class,
-
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
     ],
 
 ];

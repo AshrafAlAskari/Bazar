@@ -18,14 +18,15 @@ class UserController extends Controller
             'password' => 'required|max:32'
         ]);
 
-        // checking credintials and loging + redirect if sucsess
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password]))
-        if (Session::has('oldUrl')) {
-            $oldUrl = Session::get('oldUrl');
-            Session::forget('oldUrl');
-            return redirect()->to($oldUrl);
+        // checking credintials and logging + redirect if sucsess
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            if (Session::has('oldUrl')) {
+                $oldUrl = Session::get('oldUrl');
+                Session::forget('oldUrl');
+                return redirect()->to($oldUrl);
+            }
+            return redirect()->route('dashboard');
         }
-        return redirect()->route('dashboard');
 
         // if registeration fails return back with error message
         $alert = "Email or password or both are not correct";

@@ -10,7 +10,8 @@
         "laravel/tinker": "~1.0",
 
         "intervention/image": "2.*",
-        "intervention/imagecache": "2.*"
+        "intervention/imagecache": "2.*",
+        "tymon/jwt-auth": "0.5.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

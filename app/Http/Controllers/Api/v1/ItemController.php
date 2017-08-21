@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
 use Illuminate\Http\Request;
-use Auth;
+use App\Http\Controllers\Controller;
 use App\Category;
 use App\Item;
-use App\Cart;
+use App\User;
 use App\Order;
+use App\Cart;
+use Validator;
 use Session;
 
 class ItemController extends Controller
@@ -15,38 +17,16 @@ class ItemController extends Controller
     public function getItems()
     {
         // retreive items with their categories
-        $items = Item::orderBy('created_at','desc')->get();
         $categories = Category::orderBy('created_at','desc')->get();
-        return view('dashboard', compact('categories','items'));
+        $items = Item::orderBy('created_at','desc')->get();
+        return response()->json(compact('items','categories'));
     }
 
     public function getCategoryItems($category_id)
     {
         // retreiving items of specific category
         $items = Category::find($category_id)->items;
-        return view('items',compact('items'));
-    }
-
-    public function sortByPrice($category_id)
-    {
-        // retreive items according to price
-        $items = Category::find($category_id)->items_sort;
-        $categories = Category::orderBy('created_at','desc')->get();
-        return view('items', compact('categories','items'));
-    }
-
-    public function filterByPrice($category_id, Request $request)
-    {
-        // validating input
-        $this->validate($request, [
-            'min' => 'required|max:10000000',
-            'max' => 'required|max:10000000'
-        ]);
-
-        // retreive items according to specified price
-        $items = Item::whereBetween('price', $request->min, $request->max)->get();
-        $categories = Category::orderBy('created_at','desc')->get();
-        return view('items', compact('categories','items'));
+        return response()->json(compact('items'));
     }
 
     public function addToCart($item_id)
@@ -57,7 +37,6 @@ class ItemController extends Controller
         $cart = new Cart($oldCart);
         $cart->add($item, $item->id);
         Session::put('cart', $cart);
-        return redirect()->back();
     }
 
     // reduce one item from the cart
@@ -84,7 +63,6 @@ class ItemController extends Controller
         } else {
             Session::forget('cart');
         }
-        return redirect()->route('get_cart');
     }
 
     public function getCart()
@@ -95,7 +73,6 @@ class ItemController extends Controller
         }
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
-        return view('cart', compact('cart'));
     }
 
     public function checkout()
@@ -112,18 +89,21 @@ class ItemController extends Controller
         $order->cart = serialize($cart);
         Auth::user()->orders()->save($order);
         Session::forget('cart');
-        return redirect()->route('dashboard')->with('message', 'Successfully purchased products!');
     }
 
     public function searchItems(Request $request)
     {
         // validating input
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'search' => 'required|max:30'
         ]);
 
+        // return error if validator fails
+        if($validator->fails())
+        return response()->json(['errors' => $validator->errors()->all()],422);
+
         // searching for an item and returning result
         $items = Item::where('name', 'LIKE', '%'.$request->search.'%')->get();
-        return view('search', compact('items'))->with('search', $request->search);
+        return response()->json(compact('items'));
     }
 }

@@ -9,6 +9,9 @@
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-6">
             <div class="list-group">
+                <div class="card-header">
+                    <h5>Categories and latest items</h5>
+                </div>
                 @foreach ($categories as $category)
                     <a href="{{route('items',['category_id' => $category->id])}}" class="list-group-item list-group-item-action">{{$category->name}}</a>
                 @endforeach
@@ -18,9 +21,7 @@
         @foreach ($items as $item)
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <div class="card" style="width: 20rem;">
-                    @if (Storage::disk('local')->has($item->image))
-                        <img src="{{ route('image_item', ['filename' => $item->image]) }}" alt"" class="card-img-top" />
-                    @endif
+                    <img src="images/{{$item->image}}" alt"" class="card-img-top" />
                     <div class="card-body">
                         <h4 class="card-title">{{$item->name}}</h4>
                         <p class="card-text">{{$item->info}}</p>
@@ -31,7 +32,6 @@
                 @if($loop->index >= 7)
                     @break
                 @endif
-                <br />
             </div>
         @endforeach
     </div>

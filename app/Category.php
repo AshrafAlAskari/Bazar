@@ -10,4 +10,9 @@ class Category extends Model
     {
         return $this->hasMany(Item::Class);
     }
+
+    public function items_sort()
+    {
+        return $this->hasMany(Item::Class)->orderBy('price', 'desc');
+    }
 }
