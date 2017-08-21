@@ -12,7 +12,7 @@
             @foreach ($items as $item)
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="card" style="width: 20rem;">
-                        <img src="images/{{$item->image}}" alt"" class="card-img-top" />
+                        <img src="{{ url('/') }}images/{{$item->image}}" alt"" class="card-img-top" />
                         <div class="card-body">
                             <h4 class="card-title">{{$item->name}}</h4>
                             <p class="card-text">{{$item->info}}</p>
