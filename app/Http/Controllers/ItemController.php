@@ -9,30 +9,34 @@ use App\Item;
 use App\Cart;
 use App\Order;
 use Session;
+use Illuminate\Support\Facades\Log;
 
 class ItemController extends Controller
 {
     public function getItems()
     {
         // retreive items with their categories
-        $items = Item::orderBy('created_at','desc')->get();
         $categories = Category::orderBy('created_at','desc')->get();
+        $items = Item::orderBy('created_at','desc')->get();
         return view('dashboard', compact('categories','items'));
     }
 
     public function getCategoryItems($category_id)
     {
         // retreiving items of specific category
+        $categories = Category::orderBy('created_at','desc')->get();
         $items = Category::find($category_id)->items;
-        return view('items',compact('items'));
+        $category_id = $category_id;
+        return view('items',compact('categories', 'items', 'category_id'));
     }
 
     public function sortByPrice($category_id)
     {
         // retreive items according to price
-        $items = Category::find($category_id)->items_sort;
         $categories = Category::orderBy('created_at','desc')->get();
-        return view('items', compact('categories','items'));
+        $items = Category::find($category_id)->items_sort;
+        $category_id = $category_id;
+        return view('items', compact('categories','items','category_id'));
     }
 
     public function filterByPrice($category_id, Request $request)
@@ -44,9 +48,10 @@ class ItemController extends Controller
         ]);
 
         // retreive items according to specified price
-        $items = Item::whereBetween('price', $request->min, $request->max)->get();
         $categories = Category::orderBy('created_at','desc')->get();
-        return view('items', compact('categories','items'));
+        $items = Item::where('category_id', $category_id)->whereBetween('price', [$request->min, $request->max])->get();
+        $category_id = $category_id;
+        return view('items', compact('categories','items', 'category_id'));
     }
 
     public function addToCart($item_id)

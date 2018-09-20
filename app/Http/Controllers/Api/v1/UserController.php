@@ -83,13 +83,32 @@ class UserController extends Controller
         return response()->json(compact('user'));
     }
 
-    public function getOrders()
+    public function getOrders(Request $request)
     {
-        $orders = Auth::user()->orders;
+        // get orders
+        $user = JWTAuth::toUser($request->header('Authorization'));
+        $orders = $user->orders;
+
+        // unserialize carts from orders
         $orders->transform(function($order, $key) {
-            $order->cart = unserialize($order->cart);
+            $order->cart = unserialize(base64_decode($order->cart));
             return $order;
         });
+        return response()->json(compact('orders'));
+    }
+
+    public function getOrdersCart(Request $request)
+    {
+        // get cart items of specific order
+        $user = JWTAuth::toUser($request->header('Authorization'));
+        $orders = $user->orders;
+
+        // unserialize carts from orders
+        $orders->transform(function($order, $key) {
+            $order->cart = unserialize(base64_decode($order->cart));
+            return $order;
+        });
+        $orders = $orders->where('id', $request->order_id)->first()->cart->items;
         return response()->json(compact('orders'));
     }
 }
