@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Auth;
 use App\User;
+use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
@@ -18,17 +17,18 @@ class UserController extends Controller
         // validating input
         $validator = Validator::make($request->all(), [
             'email' => 'required|max:30',
-            'password' => 'required|max:32'
+            'password' => 'required|max:32',
         ]);
 
         // return error if validator fails
-        if($validator->fails())
-        return response()->json(['errors' => $validator->errors()->all()],422);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()], 422);
+        }
 
         // checking credintials and logging
         try {
             // attempt to verify the credentials and create a token for the user
-            if (! $token = JWTAuth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            if (!$token = JWTAuth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
         } catch (JWTException $e) {
@@ -51,12 +51,13 @@ class UserController extends Controller
             'last_name' => 'required|max:30',
             'email' => 'required|email|max:30|unique:users',
             'password' => 'required|min:4|max:32',
-            'confirm_password' => 'required|same:password|min:4|max:32'
+            'confirm_password' => 'required|same:password|min:4|max:32',
         ]);
 
         // return error if validator fails
-        if($validator->fails())
-        return response()->json(['errors' => $validator->errors()->all()],422);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()], 422);
+        }
 
         // creating new user and login + redirect if sucsess
         $user = new User();
@@ -69,7 +70,7 @@ class UserController extends Controller
         // checking credintials and logging
         try {
             // attempt to verify the credentials and create a token for the user
-            if (! $token = JWTAuth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            if (!$token = JWTAuth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
         } catch (JWTException $e) {
@@ -85,15 +86,9 @@ class UserController extends Controller
 
     public function getOrders(Request $request)
     {
-        // get orders
+        // get user orders
         $user = JWTAuth::toUser($request->header('Authorization'));
         $orders = $user->orders;
-
-        // unserialize carts from orders
-        $orders->transform(function($order, $key) {
-            $order->cart = unserialize(base64_decode($order->cart));
-            return $order;
-        });
         return response()->json(compact('orders'));
     }
 
@@ -101,14 +96,30 @@ class UserController extends Controller
     {
         // get cart items of specific order
         $user = JWTAuth::toUser($request->header('Authorization'));
-        $orders = $user->orders;
 
-        // unserialize carts from orders
-        $orders->transform(function($order, $key) {
+        // validating input
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|numeric',
+        ]);
+
+        // return error if validator fails
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $order = $user->orders->where('id', $request->order_id);
+
+        // unserialize cart items from order
+        $order->transform(function ($order, $key) {
             $order->cart = unserialize(base64_decode($order->cart));
             return $order;
         });
-        $orders = $orders->where('id', $request->order_id)->first()->cart->items;
-        return response()->json(compact('orders'));
+
+        if ($order->isNotEmpty()) {
+            $cart = $order->first()->cart->items;
+        } else {
+            $cart = collect();
+        }
+        return response()->json(compact('cart'));
     }
 }

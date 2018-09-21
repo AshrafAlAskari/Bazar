@@ -2,41 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Auth;
+use App\Cart;
 use App\Category;
 use App\Item;
-use App\Cart;
 use App\Order;
+use Auth;
+use Illuminate\Http\Request;
 use Session;
-use Illuminate\Support\Facades\Log;
 
 class ItemController extends Controller
 {
     public function getItems()
     {
         // retreive items with their categories
-        $categories = Category::orderBy('created_at','desc')->get();
-        $items = Item::orderBy('created_at','desc')->get();
-        return view('dashboard', compact('categories','items'));
+        $categories = Category::orderBy('created_at', 'desc')->get();
+        $items = Item::orderBy('created_at', 'desc')->get();
+        return view('dashboard', compact('categories', 'items'));
     }
 
     public function getCategoryItems($category_id)
     {
         // retreiving items of specific category
-        $categories = Category::orderBy('created_at','desc')->get();
-        $items = Category::find($category_id)->items;
-        $category_id = $category_id;
-        return view('items',compact('categories', 'items', 'category_id'));
+        $categories = Category::orderBy('created_at', 'desc')->get();
+        if (Category::find($category_id)) {
+            $items = Category::find($category_id)->items;
+        } else {
+            $items = collect();
+        }
+
+        return view('items', compact('categories', 'items', 'category_id'));
     }
 
     public function sortByPrice($category_id)
     {
         // retreive items according to price
-        $categories = Category::orderBy('created_at','desc')->get();
-        $items = Category::find($category_id)->items_sort;
-        $category_id = $category_id;
-        return view('items', compact('categories','items','category_id'));
+        $categories = Category::orderBy('created_at', 'desc')->get();
+        if (Category::find($category_id)) {
+            $items = Category::find($category_id)->items_sort;
+        } else {
+            $items = collect();
+        }
+
+        return view('items', compact('categories', 'items', 'category_id'));
     }
 
     public function filterByPrice($category_id, Request $request)
@@ -44,14 +51,13 @@ class ItemController extends Controller
         // validating input
         $this->validate($request, [
             'min' => 'required|max:10000000',
-            'max' => 'required|max:10000000'
+            'max' => 'required|max:10000000',
         ]);
 
         // retreive items according to specified price
-        $categories = Category::orderBy('created_at','desc')->get();
+        $categories = Category::orderBy('created_at', 'desc')->get();
         $items = Item::where('category_id', $category_id)->whereBetween('price', [$request->min, $request->max])->get();
-        $category_id = $category_id;
-        return view('items', compact('categories','items', 'category_id'));
+        return view('items', compact('categories', 'items', 'category_id'));
     }
 
     public function addToCart($item_id)
@@ -66,7 +72,8 @@ class ItemController extends Controller
     }
 
     // reduce one item from the cart
-    public function reduceItem($id) {
+    public function reduceItem($id)
+    {
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
         $cart->reduceByOne($id);
@@ -95,7 +102,7 @@ class ItemController extends Controller
     public function getCart()
     {
         // get information of the current cart
-        if(!Session::has('cart')) {
+        if (!Session::has('cart')) {
             return view('cart');
         }
         $oldCart = Session::get('cart');
@@ -106,7 +113,7 @@ class ItemController extends Controller
     public function checkout()
     {
         // redirect if the current session doesn't have a cart
-        if(!Session::has('cart')) {
+        if (!Session::has('cart')) {
             return view('cart');
         }
 
@@ -124,11 +131,11 @@ class ItemController extends Controller
     {
         // validating input
         $this->validate($request, [
-            'search' => 'required|max:30'
+            'search' => 'required|max:30',
         ]);
 
         // searching for an item and returning result
-        $items = Item::where('name', 'LIKE', '%'.$request->search.'%')->get();
+        $items = Item::where('name', 'LIKE', '%' . $request->search . '%')->get();
         return view('search', compact('items'))->with('search', $request->search);
     }
 }

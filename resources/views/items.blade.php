@@ -15,19 +15,21 @@
         </li>
         @foreach ($categories as $category)
         <li class="nav-item">
-            <a class="nav-link {{ $category->id == $category_id ? 'active' : ''}}" href="{{route('items', ['category_id' => $category->id])}}">{{ $category->name }}</a>
-        </li>    
+            <a class="nav-link {{ $category->id == $category_id ? 'active' : ''}}" href="{{route('items', ['category_id' => $category->id])}}">{{
+                $category->name }}</a>
+        </li>
         @endforeach
     </ul>
 </div>
 <br>
-@if(!$items->isEmpty())
+@if($items->isNotEmpty())
 <div class="row">
     <div class="col">
-        <form action="{{route('items_filter_price', ['category_id' => $items->first()->category_id])}}") method="get">
+        <form action="{{route('items_filter_price', ['category_id' => $items->first()->category_id])}}" ) method="get">
             <div class="form-row">
                 <div class="form-group">
-                    <a href="{{route('items_sort_price', ['category_id' => $items->first()->category_id])}}" class="btn btn-primary">Sort by price</a>
+                    <a href="{{route('items_sort_price', ['category_id' => $items->first()->category_id])}}" class="btn btn-primary">Sort
+                        by price</a>
                 </div>
                 <div class="form-group col-lg-4">
                     <input type="text" class="form-control" name="min" placeholder="Min">
@@ -50,7 +52,8 @@
             <div class="card-body">
                 <h4 class="card-title">{{$item->name}}</h4>
                 <p class="card-text">{{$item->info}}</p>
-                <a href="{{route('add_to_cart', ['item_id' => $item->id])}}" class="btn-sm btn-primary float-right">Add to cart</a>
+                <a href="{{route('add_to_cart', ['item_id' => $item->id])}}" class="btn-sm btn-primary float-right">Add
+                    to cart</a>
                 <p class="float-left">${{$item->price}}</p>
             </div>
         </div>
@@ -61,7 +64,9 @@
 @else
 <div class="row  justify-content-center">
     <br />
-    <header><h3>No items in this category yet!</h3></header>
+    <header>
+        <h3>No items in this category yet!</h3>
+    </header>
 </div>
 @endif
 @endsection

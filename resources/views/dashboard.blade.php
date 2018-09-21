@@ -17,7 +17,7 @@ Welcome to Bazar
 	@endforeach
 </ul>
 <br>
-<div class="row">	
+<div class="row">
 	@foreach ($items as $item)
 	<div class="col-lg-4 col-md-6 col-sm-12">
 		<div class="card" style="width: 20rem;">

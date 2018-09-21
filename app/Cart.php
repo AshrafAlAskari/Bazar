@@ -34,7 +34,8 @@ class Cart extends Model
         $this->totalPrice += $item->price;
     }
 
-    public function reduceByOne($id) {
+    public function reduceByOne($id)
+    {
         $this->items[$id]['qty']--;
         $this->items[$id]['price'] -= $this->items[$id]['item']['price'];
         $this->totalQty--;
@@ -44,7 +45,8 @@ class Cart extends Model
         }
     }
 
-    public function removeItem($id) {
+    public function removeItem($id)
+    {
         $this->totalQty -= $this->items[$id]['qty'];
         $this->totalPrice -= $this->items[$id]['price'];
         unset($this->items[$id]);

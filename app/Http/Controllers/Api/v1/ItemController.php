@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Category;
-use App\Item;
-use App\User;
-use App\Order;
 use App\Cart;
-use Validator;
+use App\Category;
+use App\Http\Controllers\Controller;
+use App\Item;
+use App\Order;
+use App\User;
+use Illuminate\Http\Request;
 use Session;
+use Validator;
 
 class ItemController extends Controller
 {
     public function getItems()
     {
         // retreive items with their categories
-        $categories = Category::orderBy('created_at','desc')->get();
-        $items = Item::orderBy('created_at','desc')->get();
-        return response()->json(compact('items','categories'));
+        $categories = Category::orderBy('created_at', 'desc')->get();
+        $items = Item::orderBy('created_at', 'desc')->get();
+        return response()->json(compact('items', 'categories'));
     }
 
     public function getCategoryItems($category_id)
@@ -40,7 +40,8 @@ class ItemController extends Controller
     }
 
     // reduce one item from the cart
-    public function reduceItem($id) {
+    public function reduceItem($id)
+    {
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
         $cart->reduceByOne($id);
@@ -68,7 +69,7 @@ class ItemController extends Controller
     public function getCart()
     {
         // get information of the current cart
-        if(!Session::has('cart')) {
+        if (!Session::has('cart')) {
             return view('cart');
         }
         $oldCart = Session::get('cart');
@@ -78,7 +79,7 @@ class ItemController extends Controller
     public function checkout()
     {
         // redirect if the current session doesn't have a cart
-        if(!Session::has('cart')) {
+        if (!Session::has('cart')) {
             return view('cart');
         }
 
@@ -95,15 +96,16 @@ class ItemController extends Controller
     {
         // validating input
         $validator = Validator::make($request->all(), [
-            'search' => 'required|max:30'
+            'search' => 'required|max:30',
         ]);
 
         // return error if validator fails
-        if($validator->fails())
-        return response()->json(['errors' => $validator->errors()->all()],422);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()], 422);
+        }
 
         // searching for an item and returning result
-        $items = Item::where('name', 'LIKE', '%'.$request->search.'%')->get();
+        $items = Item::where('name', 'LIKE', '%' . $request->search . '%')->get();
         return response()->json(compact('items'));
     }
 }

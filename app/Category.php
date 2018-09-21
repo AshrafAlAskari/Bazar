@@ -8,11 +8,11 @@ class Category extends Model
 {
     public function items()
     {
-        return $this->hasMany(Item::Class);
+        return $this->hasMany(Item::class);
     }
 
     public function items_sort()
     {
-        return $this->hasMany(Item::Class)->orderBy('price', 'desc');
+        return $this->hasMany(Item::class)->orderBy('price', 'desc');
     }
 }

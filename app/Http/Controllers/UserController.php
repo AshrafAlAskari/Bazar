@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Auth;
 use App\User;
+use Auth;
+use Illuminate\Http\Request;
 use Session;
 
 class UserController extends Controller
@@ -15,7 +15,7 @@ class UserController extends Controller
         // validating input
         $this->validate($request, [
             'email' => 'required|max:30',
-            'password' => 'required|max:32'
+            'password' => 'required|max:32',
         ]);
 
         // checking credintials and logging + redirect if sucsess
@@ -42,7 +42,7 @@ class UserController extends Controller
             'last_name' => 'required|max:30',
             'email' => 'required|email|max:30|unique:users',
             'password' => 'required|min:4|max:32',
-            'confirm_password' => 'required|same:password|min:4|max:32'
+            'confirm_password' => 'required|same:password|min:4|max:32',
         ]);
 
         // creating new user and login + redirect if sucsess
@@ -51,7 +51,7 @@ class UserController extends Controller
         $user->last_name = $request->last_name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
-        if($user->save()) {
+        if ($user->save()) {
             Auth::login($user);
             if (Session::has('oldUrl')) {
                 $oldUrl = Session::get('oldUrl');
@@ -69,7 +69,7 @@ class UserController extends Controller
     public function getOrders()
     {
         $orders = Auth::user()->orders;
-        $orders->transform(function($order, $key) {
+        $orders->transform(function ($order, $key) {
             $order->cart = unserialize(base64_decode($order->cart));
             return $order;
         });
